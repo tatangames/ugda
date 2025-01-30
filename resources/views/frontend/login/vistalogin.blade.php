@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title>Alcaldía Metapán</title>
+    <title>Santa Ana Norte</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('css/login/bootstrap.min.css') }}">
@@ -78,7 +78,7 @@
                                 <img src="{{ asset('images/logo.png') }}" class=" p-2">
                             </div>
                             <h3 class="mb-2 text-center pt-5"><strong>&nbsp;</strong></h3>
-                            <p class="text-center lead" style="font-weight: bold">Sistema Ejemplo</p>
+                            <p class="text-center lead" style="font-weight: bold">UNIDAD DE GESTIÓN DOCUMENTAL Y ARCHIVOS</p>
                             <form>
                                 <label style="margin-top: 10px" class="font-500">Usuario</label>
                                 <input class="form-control form-control-lg mb-3" id="usuario" autocomplete="off" type="text">
