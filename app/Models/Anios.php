@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Fuentes extends Model
+class Anios extends Model
 {
     use HasFactory;
-    protected $table = 'fuente';
+    protected $table = 'anio';
     public $timestamps = false;
 }

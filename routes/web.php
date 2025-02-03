@@ -7,7 +7,8 @@ use App\Http\Controllers\Backend\Roles\RolesController;
 use App\Http\Controllers\Backend\Roles\PermisoController;
 use App\Http\Controllers\Backend\Perfil\PerfilController;
 use App\Http\Controllers\Backend\Dashboard\DashboardController;
-
+use App\Http\Controllers\Backend\Configuracion\ConfiguracionController;
+use App\Http\Controllers\Backend\Procesos\ProcesosController;
 
 // --- LOGIN ---
 
@@ -53,8 +54,34 @@ Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('
 
 
 
-// --- DASHBOARD ---
-Route::get('/admin/inicio/index', [DashboardController::class,'vistaEjemplo'])->name('admin.dashboard.index');
+// --- CONFIGURACION ---
+
+// - Año
+Route::get('/admin/anio/index', [ConfiguracionController::class,'vistaAnio'])->name('admin.anio.index');
+Route::get('/admin/anio/tabla', [ConfiguracionController::class,'vistaAnioTabla']);
+Route::post('/admin/anio/nuevo', [ConfiguracionController::class, 'nuevaAnio']);
+Route::post('/admin/anio/informacion', [ConfiguracionController::class, 'informacionAnio']);
+Route::post('/admin/anio/editar', [ConfiguracionController::class, 'actualizarAnio']);
+
+
+// - Fuente
+Route::get('/admin/fuente/index', [ConfiguracionController::class,'vistaFuente'])->name('admin.fuente.index');
+Route::get('/admin/fuente/tabla', [ConfiguracionController::class,'vistaFuenteTabla']);
+Route::post('/admin/fuente/nuevo', [ConfiguracionController::class, 'nuevaFuente']);
+Route::post('/admin/fuente/informacion', [ConfiguracionController::class, 'informacionFuente']);
+Route::post('/admin/fuente/editar', [ConfiguracionController::class, 'actualizarFuente']);
+Route::post('/admin/fuente/mostrar', [ConfiguracionController::class, 'actualizarFuenteMostrar']);
+Route::post('/admin/fuente/ocultar', [ConfiguracionController::class, 'actualizarFuenteOcultar']);
 
 
 
+// - Empresa
+Route::get('/admin/empresa/index', [ConfiguracionController::class,'vistaEmpresa'])->name('admin.empresa.index');
+Route::get('/admin/empresa/tabla', [ConfiguracionController::class,'vistaEmpresaTabla']);
+Route::post('/admin/empresa/nuevo', [ConfiguracionController::class, 'nuevaEmpresa']);
+Route::post('/admin/empresa/informacion', [ConfiguracionController::class, 'informacionEmpresa']);
+Route::post('/admin/empresa/editar', [ConfiguracionController::class, 'actualizarEmpresa']);
+
+// --- PROCESOS ---
+// - Nuevo Registros
+Route::get('/admin/procesos/index', [ProcesosController::class,'vistaNuevoProceso'])->name('admin.proceso.index');

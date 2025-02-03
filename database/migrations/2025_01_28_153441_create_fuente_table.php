@@ -14,7 +14,13 @@ return new class extends Migration
     {
         Schema::create('fuente', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('id_anio')->unsigned();
+
             $table->string('nombre', 100);
+            // Para ocultar al crear proceso, asi solo saldra del año actual
+            $table->boolean('visible');
+
+            $table->foreign('id_anio')->references('id')->on('anio');
         });
     }
 
