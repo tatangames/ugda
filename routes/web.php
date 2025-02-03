@@ -82,6 +82,16 @@ Route::post('/admin/empresa/nuevo', [ConfiguracionController::class, 'nuevaEmpre
 Route::post('/admin/empresa/informacion', [ConfiguracionController::class, 'informacionEmpresa']);
 Route::post('/admin/empresa/editar', [ConfiguracionController::class, 'actualizarEmpresa']);
 
-// --- PROCESOS ---
+// --- NUEVO PROCESO ---
 // - Nuevo Registros
-Route::get('/admin/procesos/index', [ProcesosController::class,'vistaNuevoProceso'])->name('admin.proceso.index');
+Route::get('/admin/procesosnuevo/index', [ProcesosController::class,'vistaNuevoProceso'])->name('admin.proceso.index');
+Route::post('/admin/procesosnuevo/nuevo', [ProcesosController::class, 'nuevoRegistroProceso']);
+
+
+// --- LISTADO DE PROCESOS ---
+Route::get('/admin/procesos/index', [ProcesosController::class,'vistaListadoProcesos'])->name('admin.listado.proceso.index');
+Route::get('/admin/procesos/tabla/{id}', [ProcesosController::class,'tablaListadoProcesos']);
+Route::post('/admin/procesos/informacion', [ProcesosController::class, 'informacionProceso']);
+
+
+

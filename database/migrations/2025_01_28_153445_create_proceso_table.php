@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
 
             $table->bigInteger('id_fuente')->unsigned();
-            $table->date('fecha_registro');
             $table->string('numero_proceso', 100);
             $table->string('nombre_proyecto', 300);
             $table->string('codigo_proyecto', 100)->nullable();

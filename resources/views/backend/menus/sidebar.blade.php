@@ -42,24 +42,17 @@
                 @endcan
 
                 <li class="nav-item">
-
-                    <a href="#" class="nav-link nav-">
-                        <i class="far fa-edit"></i>
-                        <p>
-                            Procesos
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                    <a href="{{ route('admin.proceso.index') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Nuevo Registro</p>
                     </a>
+                </li>
 
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.proceso.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Nuevo Registro</p>
-                            </a>
-                        </li>
-
-                    </ul>
+                <li class="nav-item">
+                    <a href="{{ route('admin.listado.proceso.index') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Lista Procesos</p>
+                    </a>
                 </li>
 
 
