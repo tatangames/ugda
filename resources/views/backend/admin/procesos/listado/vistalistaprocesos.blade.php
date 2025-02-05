@@ -126,7 +126,7 @@
                                                 <input type="text" id="nombre-proceso" maxlength="300" autocomplete="off" class="form-control">
                                             </div>
                                         </div>
-
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -140,6 +140,89 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="modal fade" id="modalInfoDocumentos">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Información</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-infodocumento">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="hidden" id="id-filadocumentos"/>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-info">
+                                                <div class="inner">
+                                                    <h3 id="totalSolicitud"></h3>
+
+                                                    <p>SOLICITANTE</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="ion ion-bag"></i>
+                                                </div>
+                                                <a href="#" class="small-box-footer" onclick="vistaSolicitante()">Ver Información <i class="fas fa-arrow-circle-right"></i></a>
+                                            </div>
+                                        </div>
+                                        <!-- ./col -->
+                                        <div class="col-lg-3 col-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-success">
+                                                <div class="inner">
+                                                    <h3 id="totalUCP"></h3>
+
+                                                    <p>UCP</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="ion ion-stats-bars"></i>
+                                                </div>
+                                                <a href="#" class="small-box-footer" onclick="vistaUcp()">Ver Información <i class="fas fa-arrow-circle-right"></i></a>
+                                            </div>
+                                        </div>
+                                        <!-- ./col -->
+                                        <div class="col-lg-3 col-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-warning">
+                                                <div class="inner">
+                                                    <h3 id="totalAdministrador"></h3>
+
+                                                    <p>ADMINISTRADOR</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="ion ion-person-add"></i>
+                                                </div>
+                                                <a href="#" class="small-box-footer" onclick="vistaAdministrador()">Ver Información <i class="fas fa-arrow-circle-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </div>
 
@@ -168,6 +251,17 @@
                     }
                 },
             });
+            var id = {{ $primerId }};
+
+            if (id === null) {
+                console.log("El valor es null");
+            } else {
+                openLoading()
+
+                var ruta = "{{ URL::to('/admin/procesos/tabla') }}/" + id;
+                $('#tablaDatatable').load(ruta);
+            }
+
         });
     </script>
 
@@ -187,6 +281,19 @@
             $('#tablaDatatable').load(ruta);
         }
 
+        function recargar(){
+            var idFuente = document.getElementById('select-fuente').value;
+
+            if(idFuente === ''){
+                toastr.error('Fuente es requerida');
+                return;
+            }
+
+            openLoading()
+
+            var ruta = "{{ URL::to('/admin/procesos/tabla') }}/" + idFuente;
+            $('#tablaDatatable').load(ruta);
+        }
 
         function modalAgregar(){
             document.getElementById("formulario-nuevo").reset();
@@ -213,7 +320,6 @@
                         $('#ampo').val(response.data.info.ampo);
                         $('#nombre-proceso').val(response.data.info.nombre_proceso);
 
-
                         document.getElementById("select-fuente-editar").options.length = 0;
 
                         $.each(response.data.arrayanios, function( key, val ){
@@ -223,8 +329,6 @@
                                 $('#select-fuente-editar').append('<option value="' +val.id +'">'+ val.nombre +'</option>');
                             }
                         });
-
-
 
                     }else{
                         toastr.error('Información no encontrada');
@@ -240,19 +344,37 @@
 
         function editarRegistro(){
             var id = document.getElementById('id-editar').value;
-            var nombre = document.getElementById('nombre-editar').value;
 
-            if(nombre === ''){
-                toastr.error('Nombre equipo es requerido');
+            var idfuente = document.getElementById('select-fuente-editar').value;
+            var numeroProceso = document.getElementById('numero-proceso').value;
+            var nombreProyecto = document.getElementById('nombre-proyecto').value;
+            var codigoProyecto = document.getElementById('codigo-proyecto').value;
+            var numeroExpediente = document.getElementById('numero-expediente').value;
+            var ampo = document.getElementById('ampo').value;
+            var nombreProceso = document.getElementById('nombre-proceso').value;
+
+            if(numeroProceso === ''){
+                toastr.error('Número Proceso es requerido');
+                return;
+            }
+
+            if(nombreProyecto === ''){
+                toastr.error('Nombre Proyecto es requerido');
                 return;
             }
 
             openLoading();
             var formData = new FormData();
             formData.append('id', id);
-            formData.append('nombre', nombre);
+            formData.append('idfuente', idfuente);
+            formData.append('numeroProceso', numeroProceso);
+            formData.append('nombreProyecto', nombreProyecto);
+            formData.append('codigoProyecto', codigoProyecto);
+            formData.append('numeroExpediente', numeroExpediente);
+            formData.append('ampo', ampo);
+            formData.append('nombreProceso', nombreProceso);
 
-            axios.post(url+'/empresa/editar', formData, {
+            axios.post(url+'/procesos/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -272,6 +394,53 @@
                 });
         }
 
+
+        // MOSTRAR REGISTROS DE CADA UNO
+        function infoDocumentos(id){
+
+            openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+
+            axios.post(url+'/procesos/informacion/documentos', formData, {
+            })
+                .then((response) => {
+                    closeLoading();
+
+                    if(response.data.success === 1){
+
+                        $('#id-filadocumentos').val(id);
+
+                        document.getElementById("totalSolicitud").innerText = response.data.totalSolicitante;
+                        document.getElementById("totalUCP").innerText = response.data.totalUCP;
+                        document.getElementById("totalAdministrador").innerText = response.data.totalAdministrador;
+
+                        $('#modalInfoDocumentos').modal('show');
+                    }
+                    else {
+                        toastr.error('Error al actualizar');
+                    }
+                })
+                .catch((error) => {
+                    toastr.error('Error al actualizar');
+                    closeLoading();
+                });
+        }
+
+        function vistaSolicitante(){
+            var id = document.getElementById('id-filadocumentos').value;
+            window.location.href="{{ url('/admin/prosolicitante/index') }}/" + id;
+        }
+
+        function vistaUcp(){
+            var id = document.getElementById('id-filadocumentos').value;
+            window.location.href="{{ url('/admin/proucp/index') }}/" + id;
+        }
+
+        function vistaAdministrador(){
+            var id = document.getElementById('id-filadocumentos').value;
+            window.location.href="{{ url('/admin/proadministrador/index') }}/" + id;
+        }
 
 
     </script>

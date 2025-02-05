@@ -92,6 +92,50 @@ Route::post('/admin/procesosnuevo/nuevo', [ProcesosController::class, 'nuevoRegi
 Route::get('/admin/procesos/index', [ProcesosController::class,'vistaListadoProcesos'])->name('admin.listado.proceso.index');
 Route::get('/admin/procesos/tabla/{id}', [ProcesosController::class,'tablaListadoProcesos']);
 Route::post('/admin/procesos/informacion', [ProcesosController::class, 'informacionProceso']);
+Route::post('/admin/procesos/editar', [ProcesosController::class, 'editarProceso']);
+// Informacion de los documentos que tiene cada Tabla
+Route::post('/admin/procesos/informacion/documentos', [ProcesosController::class, 'informacionDocumentos']);
+
+// --- VISTAS DE PROCESOS ---
+// - Solicitantes
+Route::get('/admin/prosolicitante/index/{id}', [ProcesosController::class,'indexProcesoSolicitante']);
+Route::get('/admin/prosolicitante/tabla/{id}', [ProcesosController::class,'tablaProcesoSolicitante']);
+Route::post('/admin/prosolicitante/nuevo', [ProcesosController::class, 'nuevoProcesoSolicitante']);
+Route::post('/admin/prosolicitante/borrar', [ProcesosController::class, 'borrarProcesoSolicitante']);
+Route::post('/admin/prosolicitante/informacion', [ProcesosController::class, 'informacionProcesoSolicitante']);
+Route::post('/admin/prosolicitante/editar', [ProcesosController::class, 'editarProcesoSolicitante']);
+Route::get('/admin/prosolicitante/visualizar/documento/{id}', [ProcesosController::class,'visualizarDocSolicitante']);
+Route::get('/admin/prosolicitante/descargar/documento/{id}', [ProcesosController::class,'descargarDocSolicitante']);
+
+// - UCP
+Route::get('/admin/proucp/index/{id}', [ProcesosController::class,'indexProcesoUcp']);
+Route::get('/admin/proucp/tabla/{id}', [ProcesosController::class,'tablaProcesoUcp']);
+Route::post('/admin/proucp/nuevo', [ProcesosController::class, 'nuevoProcesoUcp']);
+Route::post('/admin/proucp/borrar', [ProcesosController::class, 'borrarProcesoUcp']);
+Route::post('/admin/proucp/informacion', [ProcesosController::class, 'informacionProcesoUcp']);
+Route::post('/admin/proucp/editar', [ProcesosController::class, 'editarProcesoUcp']);
+Route::get('/admin/proucp/visualizar/documento/{id}', [ProcesosController::class,'visualizarDocUcp']);
+Route::get('/admin/proucp/descargar/documento/{id}', [ProcesosController::class,'descargarDocUcp']);
+
+// - Empresas
+Route::get('/admin/proucp/empresas/index/{id}', [ProcesosController::class,'indexProcesoUcpEmpresas']);
+Route::get('/admin/proucp/empresas/tabla/{id}', [ProcesosController::class,'tablaProcesoUcpEmpresas']);
+Route::post('/admin/proucp/empresas/nuevo', [ProcesosController::class, 'nuevoProcesoUcpEmpresas']);
+Route::post('/admin/proucp/empresas/borrar', [ProcesosController::class, 'borrarProcesoUcpEmpresas']);
+Route::post('/admin/proucp/empresas/informacion', [ProcesosController::class, 'informacionProcesoUcpEmpresas']);
+Route::post('/admin/proucp/empresas/editar', [ProcesosController::class, 'editarProcesoUcpEmpresas']);
+
+// - Administrador
+Route::get('/admin/proadministrador/index/{id}', [ProcesosController::class,'indexProcesoAdministrador']);
+Route::get('/admin/proadministrador/tabla/{id}', [ProcesosController::class,'tablaProcesoAdministrador']);
+Route::post('/admin/proadministrador/nuevo', [ProcesosController::class, 'nuevoProcesoAdministrador']);
+Route::post('/admin/proadministrador/borrar', [ProcesosController::class, 'borrarProcesoAdministrador']);
+Route::post('/admin/proadministrador/informacion', [ProcesosController::class, 'informacionProcesoAdministrador']);
+Route::post('/admin/proadministrador/editar', [ProcesosController::class, 'editarProcesoAdministrador']);
+Route::get('/admin/proadministrador/visualizar/documento/{id}', [ProcesosController::class,'visualizarDocAdministrador']);
+Route::get('/admin/proadministrador/descargar/documento/{id}', [ProcesosController::class,'descargarDocAdministrador']);
+
+
 
 
 

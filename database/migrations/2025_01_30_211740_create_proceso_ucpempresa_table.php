@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('proceso_ucpempresa', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('id_proceso')->unsigned();
+            $table->bigInteger('id_procesoucp')->unsigned();
             $table->bigInteger('id_empresa')->unsigned();
 
-            $table->foreign('id_proceso')->references('id')->on('proceso');
+            $table->foreign('id_procesoucp')->references('id')->on('proceso_ucp');
             $table->foreign('id_empresa')->references('id')->on('empresa');
         });
     }

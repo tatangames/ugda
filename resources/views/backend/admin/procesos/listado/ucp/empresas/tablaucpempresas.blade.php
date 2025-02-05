@@ -7,45 +7,22 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th style="width: 6%"># Proceso</th>
-                                <th style="width: 6%">Nom. Proyecto</th>
-                                <th style="width: 6%">Cod. Proyecto</th>
-                                <th style="width: 6%"># Expe.</th>
-                                <th style="width: 6%">Ampo</th>
-                                <th style="width: 6%">Nom. Proceso</th>
-                                <th style="width: 6%">Opciones</th>
+                                <th style="width: 50%">Empresa</th>
+                                <th style="width: 3%">Opciones</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             @foreach($listado as $dato)
                                 <tr>
-
-                                    <td>{{ $dato->numero_proceso }}</td>
-                                    <td>{{ $dato->nombre_proyecto }}</td>
-                                    <td>{{ $dato->codigo_proyecto }}</td>
-                                    <td>{{ $dato->numero_expediente }}</td>
-                                    <td>{{ $dato->ampo }}</td>
-                                    <td>{{ $dato->nombre_proceso }}</td>
+                                    <td>{{ $dato->nombreEmpresas }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-success btn-xs" onclick="informacion({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
+                                        <button type="button" style="margin: 5px" class="btn btn-danger btn-xs" onclick="informacionBorrar({{ $dato->id }})">
+                                            <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                         </button>
-
-                                        <button type="button" style="margin: 4px" class="btn btn-info btn-xs" onclick="infoDocumentos({{ $dato->id }})">
-                                            <i class="fas fa-search" title="Registros"></i>&nbsp; Registros
-                                        </button>
-
                                     </td>
-
                                 </tr>
                             @endforeach
-
-                            <script>
-                                setTimeout(function () {
-                                    closeLoading();
-                                }, 500);
-                            </script>
 
                             </tbody>
                         </table>
@@ -62,7 +39,7 @@
         $("#tabla").DataTable({
             "paging": true,
             "lengthChange": true,
-            "order": [[0, 'asc']],
+            "order": [[0, 'desc']],
             "searching": true,
             "ordering": true,
             "info": true,
