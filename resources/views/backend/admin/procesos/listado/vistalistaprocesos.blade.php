@@ -442,6 +442,46 @@
             window.location.href="{{ url('/admin/proadministrador/index') }}/" + id;
         }
 
+        function infoBorrar(id){
+            Swal.fire({
+                title: 'Borrar Proceso',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    borrarSolicitud(id)
+                }
+            })
+        }
+
+        function borrarSolicitud(id){
+            openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+
+            axios.post(url+'/procesos/borrar', formData, {
+            })
+                .then((response) => {
+                    closeLoading();
+                    if(response.data.success === 1){
+                        toastr.success('Borrado');
+                        recargar();
+                    }
+                    else {
+                        toastr.error('Error al registrar');
+                    }
+                })
+                .catch((error) => {
+                    toastr.error('Error al registrar');
+                    closeLoading();
+                });
+        }
+
 
     </script>
 

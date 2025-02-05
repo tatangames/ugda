@@ -27,11 +27,11 @@
                                     <td>{{ $dato->nombreEstado }}</td>
                                     <td><pre>{{ $dato->nombreEmpresas }}</pre></td>
                                     <td>
-                                        <a href="{{ url('/admin/prosolicitante/visualizar/documento/'.$dato->id) }}" target="_blank" class="btn btn-info btn-xs">
+                                        <a href="{{ url('/admin/proucp/visualizar/documento/'.$dato->id) }}" target="_blank" class="btn btn-info btn-xs">
                                             <i class="fa fa-file-pdf"></i> Ver PDF
                                         </a>
 
-                                        <a href="{{ url('/admin/prosolicitante/descargar/documento/'.$dato->id) }}" class="btn btn-info btn-xs">
+                                        <a href="{{ url('/admin/proucp/descargar/documento/'.$dato->id) }}" class="btn btn-info btn-xs">
                                             <i class="fa fa-file-pdf"></i> Descargar PDF
                                         </a>
 

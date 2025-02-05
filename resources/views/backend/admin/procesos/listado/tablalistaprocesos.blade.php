@@ -13,6 +13,7 @@
                                 <th style="width: 6%"># Expe.</th>
                                 <th style="width: 6%">Ampo</th>
                                 <th style="width: 6%">Nom. Proceso</th>
+                                <th style="width: 6%">Consolidado</th>
                                 <th style="width: 6%">Opciones</th>
                             </tr>
                             </thead>
@@ -28,12 +29,23 @@
                                     <td>{{ $dato->ampo }}</td>
                                     <td>{{ $dato->nombre_proceso }}</td>
                                     <td>
+                                        @if($dato->yaConsolido == 1)
+                                            <span class="badge bg-success">SI</span>
+                                        @else
+                                            <span class="badge bg-danger">NO</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <button type="button" class="btn btn-success btn-xs" onclick="informacion({{ $dato->id }})">
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
                                         </button>
 
                                         <button type="button" style="margin: 4px" class="btn btn-info btn-xs" onclick="infoDocumentos({{ $dato->id }})">
                                             <i class="fas fa-search" title="Registros"></i>&nbsp; Registros
+                                        </button>
+
+                                        <button type="button" style="margin: 4px" class="btn btn-danger btn-xs" onclick="infoBorrar({{ $dato->id }})">
+                                            <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                         </button>
 
                                     </td>

@@ -103,6 +103,11 @@ class ProcesosController extends Controller
             ->orderBy('numero_proceso', 'asc')
             ->get();
 
+        foreach ($listado as $item){
+
+            $item->yaConsolido = 1;
+        }
+
         return view('backend.admin.procesos.listado.tablalistaprocesos', compact('listado'));
     }
 
@@ -155,6 +160,78 @@ class ProcesosController extends Controller
             ]);
 
             return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+    public function borrarProcesoCompleto(Request $request)
+    {
+        $regla = array(
+            'id' => 'required',
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){ return ['success' => 0];}
+
+        if(Procesos::where('id', $request->id)->first()){
+
+            DB::beginTransaction();
+
+            try {
+
+                // BORRAR DOCUMENTOS
+
+                // PROCESOS SOLICI
+                $arrayProSolicitante = ProcesosSolicitante::where('id_proceso', $request->id)->get();
+                foreach ($arrayProSolicitante as $item){
+                    if($item->documento != null){
+                        if (Storage::disk('archivos')->exists($item->documento)) {
+                            Storage::disk('archivos')->delete($item->documento);
+                        }
+                    }
+                }
+
+                $arrayProUcp = ProcesosUcp::where('id_proceso', $request->id)->get();
+                foreach ($arrayProUcp as $item){
+                    if($item->documento != null){
+                        if (Storage::disk('archivos')->exists($item->documento)) {
+                            Storage::disk('archivos')->delete($item->documento);
+                        }
+                    }
+                }
+
+
+                $arrayProAdministrador = ProcesosAdministrador::where('id_proceso', $request->id)->get();
+                foreach ($arrayProAdministrador as $item){
+                    if($item->documento != null){
+                        if (Storage::disk('archivos')->exists($item->documento)) {
+                            Storage::disk('archivos')->delete($item->documento);
+                        }
+                    }
+                }
+
+                // BORRAR FILAS
+
+                ProcesosAdministrador::where('id_proceso', $request->id)->delete();
+
+                foreach ($arrayProUcp as $item){
+                    ProcesosUcpEmpresa::where('id_procesoucp', $item->id)->delete();
+                }
+
+                ProcesosUcp::where('id_proceso', $request->id)->delete();
+                ProcesosSolicitante::where('id_proceso', $request->id)->delete();
+                Procesos::where('id', $request->id)->delete();
+
+                DB::commit();
+                return ['success' => 1];
+
+            }catch(\Throwable $e){
+                Log::info('error: ' . $e);
+                DB::rollback();
+                return ['success' => 99];
+            }
         }else{
             return ['success' => 2];
         }
@@ -424,7 +501,7 @@ class ProcesosController extends Controller
                 $dato->nombreEstado = "Desierto";
             }
 
-            $arrayEmpresa = ProcesosUcpEmpresa::where('id_proceso', $dato->id)->get();
+            $arrayEmpresa = ProcesosUcpEmpresa::where('id_procesoucp', $dato->id)->get();
 
             $nombreEmpresas = "";
             foreach ($arrayEmpresa as $item) {
@@ -485,7 +562,7 @@ class ProcesosController extends Controller
                     foreach ($datosContenedor as $filaArray) {
 
                         $detalle = new ProcesosUcpEmpresa();
-                        $detalle->id_proceso = $registro->id;
+                        $detalle->id_procesoucp = $registro->id;
                         $detalle->id_empresa = $filaArray;
                         $detalle->save();
 
@@ -524,7 +601,7 @@ class ProcesosController extends Controller
                 Storage::disk('archivos')->delete($documentoOld);
             }
 
-            ProcesosUcpEmpresa::where('id_proceso', $request->id)->delete();
+            ProcesosUcpEmpresa::where('id_procesoucp', $request->id)->delete();
             ProcesosUcp::where('id', $request->id)->delete();
 
             return ['success' => 1];
@@ -660,7 +737,7 @@ class ProcesosController extends Controller
 
     public function tablaProcesoUcpEmpresas($id)
     {
-        $listado = ProcesosUcpEmpresa::where('id_proceso', $id)->get();
+        $listado = ProcesosUcpEmpresa::where('id_procesoucp', $id)->get();
         foreach ($listado as $dato) {
             $infoEmpre = Empresas::where('id', $dato->id_empresa)->first();
             $dato->nombreEmpresas = $infoEmpre->nombre;
@@ -687,7 +764,7 @@ class ProcesosController extends Controller
             Log::info($request->all());
 
             $registro = new ProcesosUcpEmpresa();
-            $registro->id_proceso = $request->id;
+            $registro->id_procesoucp = $request->id;
             $registro->id_empresa = $request->idempresa;
             $registro->save();
 

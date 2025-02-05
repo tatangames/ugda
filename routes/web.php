@@ -93,8 +93,12 @@ Route::get('/admin/procesos/index', [ProcesosController::class,'vistaListadoProc
 Route::get('/admin/procesos/tabla/{id}', [ProcesosController::class,'tablaListadoProcesos']);
 Route::post('/admin/procesos/informacion', [ProcesosController::class, 'informacionProceso']);
 Route::post('/admin/procesos/editar', [ProcesosController::class, 'editarProceso']);
+Route::post('/admin/procesos/borrar', [ProcesosController::class, 'borrarProcesoCompleto']);
+
 // Informacion de los documentos que tiene cada Tabla
 Route::post('/admin/procesos/informacion/documentos', [ProcesosController::class, 'informacionDocumentos']);
+
+
 
 // --- VISTAS DE PROCESOS ---
 // - Solicitantes
