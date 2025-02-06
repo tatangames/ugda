@@ -269,7 +269,7 @@ class ProcesosController extends Controller
 
     public function consolidadoProcesoFinal($id){
 
-        if(ProcesosSolicitante::where('id_proceso', $id)->first()){
+
 
             // **** ORDEN DE LOS DOCUMENTOS A UNIR *****
             $documentosArray = [];
@@ -317,6 +317,10 @@ class ProcesosController extends Controller
                 }
             }
 
+            if (empty($documentosArray)) {
+                return "Ningun Documento registrado";
+            }
+
 
             // Crear instancia de mPDF
             $mpdf = new Mpdf();
@@ -349,9 +353,7 @@ class ProcesosController extends Controller
             // Enviar PDF al navegador sin guardarlo
             $mpdf->Output('Consolidado.pdf', Destination::INLINE);
 
-        }else{
-            return "Archivo no encontrado";
-        }
+
     }
 
 

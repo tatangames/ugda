@@ -149,5 +149,12 @@ Route::get('/admin/buscador/encontrado/index/{id}', [ProcesosController::class,'
 Route::get('/admin/buscador/encontrado/tabla/{id}', [ProcesosController::class,'tablaBuscadorItemEncontrado']);
 
 
+// --- FILTROS ---
+Route::get('/admin/filtro/index', [ConfiguracionController::class,'indexVistaFiltros'])->name('admin.filtros.index');
+// -- lista procesos sin consolidar
+Route::get('/admin/filtro/busqueda/noconsolidado/{idanio}', [ConfiguracionController::class,'indexBusquedaNoConsolidado']);
+Route::get('/admin/filtro/busqueda/noconsolidado/tabla/{idanio}', [ConfiguracionController::class,'tablaBusquedaNoConsolidado']);
+
+
 
 

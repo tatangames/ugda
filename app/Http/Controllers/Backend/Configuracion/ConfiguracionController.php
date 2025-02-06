@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Anios;
 use App\Models\Empresas;
 use App\Models\Fuentes;
+use App\Models\Procesos;
+use App\Models\ProcesosAdministrador;
+use App\Models\ProcesosSolicitante;
+use App\Models\ProcesosUcp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -313,6 +317,80 @@ class ConfiguracionController extends Controller
             return ['success' => 2];
         }
     }
+
+
+
+
+    //*********************** FILTROS **********************************
+
+    public function indexVistaFiltros()
+    {
+        $arrayAnio = Anios::orderBy('nombre', 'asc')->get();
+
+        return view('backend.admin.filtros.vistafiltros', compact('arrayAnio'));
+    }
+
+
+    public function indexBusquedaNoConsolidado($id)
+    {
+        return view('backend.admin.filtros.listado.vistanoconsolidado', compact('id'));
+    }
+
+
+    // PROCESOS LISTOS PARA CONSOLIDAR Y NO SE ACTIVADO EL BOOLEAN DEL CAMPO TABLA
+    public function tablaBusquedaNoConsolidado($id)
+    {
+        $pilaArrayAnio = array();
+
+        $arrayFuentes = Fuentes::where('id_anio', $id)->get();
+
+        foreach ($arrayFuentes as $item){
+            array_push($pilaArrayAnio, $item->id);
+        }
+
+        $listadoFiltro = Procesos::whereIn('id_fuente', $pilaArrayAnio)
+            ->orderBy('numero_proceso', 'asc')
+            ->get();
+
+       // YA HAY EXPEDIENTE PERO NO ESTA CONSOLIDADO
+
+        $pilaProcesos = array();
+
+        foreach ($listadoFiltro as $item){
+            $docSolitante = false;
+            $docUcp = false;
+            $docAdministrador = false;
+
+            if(ProcesosSolicitante::where('id_proceso', $item->id)->first()){
+                $docSolitante = true;
+            }
+
+            if(ProcesosUcp::where('id_proceso', $item->id)->first()){
+                $docUcp = true;
+            }
+
+            if(ProcesosAdministrador::where('id_proceso', $item->id)->first()){
+                $docAdministrador = true;
+            }
+
+            // NO ESTA CONSOLIDADO Y YA HAY EXPEDIENTES
+            if($docSolitante && $docUcp && $docAdministrador){
+                if($item->consolidado == 0){
+                    array_push($pilaProcesos, $item->id);
+                }
+            }
+        }
+
+        $listado = Procesos::where('id', $pilaProcesos)
+            ->orderBy('numero_proceso', 'asc')
+            ->get();
+
+        return view('backend.admin.filtros.listado.tablanoconsolidado', compact('listado'));
+    }
+
+
+
+
 
 
 }
