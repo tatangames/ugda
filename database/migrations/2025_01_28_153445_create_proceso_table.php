@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('ampo', 50)->nullable();
             $table->string('nombre_proceso', 300)->nullable();
 
+            // Se setea cuando haya registros finales
+            $table->boolean('consolidado');
+
             $table->foreign('id_fuente')->references('id')->on('fuente');
         });
     }

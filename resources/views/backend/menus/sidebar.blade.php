@@ -42,6 +42,13 @@
                 @endcan
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.buscador.index') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Buscador</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.proceso.index') }}" target="frameprincipal" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Nuevo Registro</p>
@@ -54,7 +61,6 @@
                         <p>Lista Procesos</p>
                     </a>
                 </li>
-
 
 
                 <li class="nav-item">

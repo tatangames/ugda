@@ -28,27 +28,6 @@
                 </div>
                 <div class="card-body">
 
-                    <div class="row d-flex align-items-center">
-                        <div class="form-group col-md-3">
-                            <label style="color: #686868">Fuente</label>
-                            <div>
-                                <select id="select-fuente" class="form-control">
-                                    @foreach($arrayFuente as $item)
-                                        <option value="{{$item->id}}">{{$item->nombreCompleto}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-auto">
-                            <button type="button" onclick="buscarListado()" class="btn btn-success btn-sm">
-                                <i class="fas fa-search"></i>
-                                Buscar
-                            </button>
-                        </div>
-                    </div>
-
-
                     <div class="row">
                         <div class="col-md-12">
                             <div id="tablaDatatable">
@@ -262,47 +241,19 @@
                     }
                 },
             });
-            var id = {{ $primerId }};
+            var id = {{ $id }};
 
-            if (id === null) {
-                console.log("El valor es null");
-            } else {
-                openLoading()
-
-                var ruta = "{{ URL::to('/admin/procesos/tabla') }}/" + id;
-                $('#tablaDatatable').load(ruta);
-            }
-
+            var ruta = "{{ URL::to('/admin/buscador/encontrado/tabla') }}/" + id;
+            $('#tablaDatatable').load(ruta);
         });
     </script>
 
     <script>
 
-        function buscarListado(){
-            var idFuente = document.getElementById('select-fuente').value;
-
-            if(idFuente === ''){
-                toastr.error('Fuente es requerida');
-                return;
-            }
-
-            openLoading()
-
-            var ruta = "{{ URL::to('/admin/procesos/tabla') }}/" + idFuente;
-            $('#tablaDatatable').load(ruta);
-        }
-
         function recargar(){
-            var idFuente = document.getElementById('select-fuente').value;
+            var id = {{ $id }};
 
-            if(idFuente === ''){
-                toastr.error('Fuente es requerida');
-                return;
-            }
-
-            openLoading()
-
-            var ruta = "{{ URL::to('/admin/procesos/tabla') }}/" + idFuente;
+            var ruta = "{{ URL::to('/admin/buscador/encontrado/tabla') }}/" + id;
             $('#tablaDatatable').load(ruta);
         }
 
@@ -358,7 +309,6 @@
                     toastr.error('Información no encontrada');
                 });
         }
-
 
         function editarRegistro(){
             var id = document.getElementById('id-editar').value;

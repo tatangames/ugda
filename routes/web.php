@@ -94,9 +94,10 @@ Route::get('/admin/procesos/tabla/{id}', [ProcesosController::class,'tablaListad
 Route::post('/admin/procesos/informacion', [ProcesosController::class, 'informacionProceso']);
 Route::post('/admin/procesos/editar', [ProcesosController::class, 'editarProceso']);
 Route::post('/admin/procesos/borrar', [ProcesosController::class, 'borrarProcesoCompleto']);
-
 // Informacion de los documentos que tiene cada Tabla
 Route::post('/admin/procesos/informacion/documentos', [ProcesosController::class, 'informacionDocumentos']);
+// Consolidado Final
+Route::get('/admin/procesos/docpdf/consolidado/{id}', [ProcesosController::class,'consolidadoProcesoFinal']);
 
 
 
@@ -139,6 +140,13 @@ Route::post('/admin/proadministrador/editar', [ProcesosController::class, 'edita
 Route::get('/admin/proadministrador/visualizar/documento/{id}', [ProcesosController::class,'visualizarDocAdministrador']);
 Route::get('/admin/proadministrador/descargar/documento/{id}', [ProcesosController::class,'descargarDocAdministrador']);
 
+
+// --- BUSCADOR ---
+Route::get('/admin/buscador/index', [ProcesosController::class,'indexBuscador'])->name('admin.buscador.index');
+Route::post('/admin/buscador/archivos', [ProcesosController::class, 'buscadorArchivos']);
+// * Carga el item seleccionado
+Route::get('/admin/buscador/encontrado/index/{id}', [ProcesosController::class,'indexBuscadorItemEncontrado']);
+Route::get('/admin/buscador/encontrado/tabla/{id}', [ProcesosController::class,'tablaBuscadorItemEncontrado']);
 
 
 

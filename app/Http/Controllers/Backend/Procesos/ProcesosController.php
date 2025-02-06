@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 
 class ProcesosController extends Controller
 {
@@ -65,6 +67,7 @@ class ProcesosController extends Controller
             $registro->numero_expediente  = $request->numeroExpediente;
             $registro->ampo  = $request->ampo;
             $registro->nombre_proceso  = $request->nombreProceso;
+            $registro->consolidado = 0;
             $registro->save();
 
             DB::commit();
@@ -103,11 +106,6 @@ class ProcesosController extends Controller
             ->orderBy('numero_proceso', 'asc')
             ->get();
 
-        foreach ($listado as $item){
-
-            $item->yaConsolido = 1;
-        }
-
         return view('backend.admin.procesos.listado.tablalistaprocesos', compact('listado'));
     }
 
@@ -141,6 +139,7 @@ class ProcesosController extends Controller
             'idfuente' => 'required',
             'numeroProceso' => 'required',
             'nombreProyecto' => 'required',
+            'toggle' => 'required',
         );
 
         $validar = Validator::make($request->all(), $regla);
@@ -157,6 +156,7 @@ class ProcesosController extends Controller
                 'numero_expediente' => $request->numeroExpediente,
                 'ampo' => $request->ampo,
                 'nombre_proceso' => $request->nombreProceso,
+                'consolidado' => $request->toggle,
             ]);
 
             return ['success' => 1];
@@ -264,6 +264,95 @@ class ProcesosController extends Controller
         ];
     }
 
+
+    // CONSOLIDADO FINAL
+
+    public function consolidadoProcesoFinal($id){
+
+        if(ProcesosSolicitante::where('id_proceso', $id)->first()){
+
+            // **** ORDEN DE LOS DOCUMENTOS A UNIR *****
+            $documentosArray = [];
+
+            // SOLICITANTE
+            $arraySolicitantes = ProcesosSolicitante::where('id_proceso', $id)
+                ->orderBy('fecha_entrega', 'ASC')
+                ->get();
+
+            foreach ($arraySolicitantes as $item){
+                if($item->documento != null){
+                    $documentosArray[] = [
+                        'ruta' => storage_path("app/public/archivos/" . $item->documento),
+                        'nombre' => $item->texto_documento
+                    ];
+                }
+            }
+
+
+            // UCP
+            $arrayUcp = ProcesosUcp::where('id_proceso', $id)
+                ->orderBy('fecha_entrega', 'ASC')
+                ->get();
+
+            foreach ($arrayUcp as $item){
+                if($item->documento != null){
+                    $documentosArray[] = [
+                        'ruta' => storage_path("app/public/archivos/" . $item->documento),
+                        'nombre' => $item->texto_documento
+                    ];                }
+            }
+
+
+            // ADMINISTRADOR
+            $arrayAdministrador = ProcesosAdministrador::where('id_proceso', $id)
+                ->orderBy('fecha_entrega', 'ASC')
+                ->get();
+
+            foreach ($arrayAdministrador as $item){
+                if($item->documento != null){
+                    $documentosArray[] = [
+                        'ruta' => storage_path("app/public/archivos/" . $item->documento),
+                        'nombre' => $item->texto_documento
+                    ];
+                }
+            }
+
+
+            // Crear instancia de mPDF
+            $mpdf = new Mpdf();
+
+            foreach ($documentosArray as $documento) {
+                if (file_exists($documento['ruta'])) {
+
+                    // AGREGAR PAGINA DE TEXTO
+                    if($documento['nombre'] != null){
+                        // Agregar página en blanco con texto en medio
+                        $mpdf->AddPage();
+                        $mpdf->SetFont('Arial', 'B', 40);
+                        $offset = 90;
+                        $mpdf->SetXY(10, ($mpdf->h / 2) - $offset);
+                        // Ajustar interlineado aumentando la altura de línea
+                        $lineHeight = 18; // Puedes probar con 40 o 60 según el resultado
+                        $mpdf->MultiCell(190, $lineHeight, $documento['nombre'], 0, 'C');
+                    }
+
+                    // Importar PDF al documento principal
+                    $pageCount = $mpdf->setSourceFile($documento['ruta']);
+                    for ($i = 1; $i <= $pageCount; $i++) {
+                        $tplId = $mpdf->importPage($i);
+                        $mpdf->AddPage();
+                        $mpdf->useTemplate($tplId);
+                    }
+                }
+            }
+
+            // Enviar PDF al navegador sin guardarlo
+            $mpdf->Output('Consolidado.pdf', Destination::INLINE);
+
+        }else{
+            return "Archivo no encontrado";
+        }
+    }
 
 
 
@@ -1010,5 +1099,81 @@ class ProcesosController extends Controller
 
 
 
+
+    //******************** BUSCADOR ********************************
+
+
+    public function indexBuscador()
+    {
+        return view('backend.admin.buscador.vistabuscador');
+    }
+
+
+    public function buscadorArchivos(Request $request)
+    {
+        if ($request->get('query')) {
+            $query = $request->get('query');
+
+
+            $data = Procesos::where('numero_proceso', 'LIKE', "%{$query}%")
+                ->orWhere('nombre_proyecto', 'LIKE', "%{$query}%")
+                ->orWhere('codigo_proyecto', 'LIKE', "%{$query}%")
+                ->orWhere('numero_expediente', 'LIKE', "%{$query}%")
+                ->orWhere('nombre_proceso', 'LIKE', "%{$query}%")
+                ->limit(40)
+                ->get();
+
+            $output = '<ul class="dropdown-menu" style="display:block; position:relative; overflow: auto; max-height: 300px; width: 600px">';
+            $tiene = true;
+            foreach ($data as $row) {
+
+                $infoFuente = Fuentes::where('id', $row->id_fuente)->first();
+                $infoAnio = Anios::where('id', $infoFuente->id_anio)->first();
+
+                $nombreCompleto = "(" . $infoAnio->nombre . " | " . $infoFuente->nombre . ") " . $row->nombre_proyecto;
+
+                // si solo hay 1 fila, No mostrara el hr, salto de linea
+                if (count($data) == 1) {
+                    if (!empty($row)) {
+                        $tiene = false;
+                        $output .= '
+                 <li class="cursor-pointer" onclick="modificarValor(this)" id="' . $row->id . '">' . $nombreCompleto . '</li>
+                ';
+                    }
+                } else {
+                    if (!empty($row)) {
+                        $tiene = false;
+                        $output .= '
+                 <li class="cursor-pointer" onclick="modificarValor(this)" id="' . $row->id . '">' . $nombreCompleto . '</li>
+                   <hr>
+                ';
+                    }
+                }
+            }
+            $output .= '</ul>';
+            if ($tiene) {
+                $output = '';
+            }
+            echo $output;
+        }
+    }
+
+
+    public function indexBuscadorItemEncontrado($id)
+    {
+        return view('backend.admin.buscador.lista.vistalistabuscador', compact('id'));
+    }
+
+
+    public function tablaBuscadorItemEncontrado($id)
+    {
+        if(Procesos::where('id', $id)->first()){
+
+            $listado = Procesos::where('id', $id)->get();
+            return view('backend.admin.buscador.lista.tablalistabuscador', compact('listado'));
+        }else{
+            return "No encontrado";
+        }
+    }
 
 }
