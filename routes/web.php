@@ -155,6 +155,12 @@ Route::get('/admin/filtro/index', [ConfiguracionController::class,'indexVistaFil
 Route::get('/admin/filtro/busqueda/noconsolidado/{idanio}', [ConfiguracionController::class,'indexBusquedaNoConsolidado']);
 Route::get('/admin/filtro/busqueda/noconsolidado/tabla/{idanio}', [ConfiguracionController::class,'tablaBusquedaNoConsolidado']);
 
+//- Falta al menos 1 expediente
+Route::get('/admin/filtro/busqueda/faltaexpediente', [ConfiguracionController::class,'indexFiltroFaltaExpedientes']);
+Route::get('/admin/filtro/busqueda/faltaexpediente/tabla', [ConfiguracionController::class,'tablaFiltroFaltaExpedientes']);
 
+// Procesos por año ya consolidados
+Route::get('/admin/filtro/busqueda/yaconsolidados/{id}', [ConfiguracionController::class,'indexFiltroYaConsolidados']);
+Route::get('/admin/filtro/busqueda/yaconsolidados/tabla/{id}', [ConfiguracionController::class,'tablaFiltroYaConsolidados']);
 
 

@@ -32,11 +32,9 @@
         <div class="container-fluid">
             <div class="card card-gray-dark">
                 <div class="card-header">
-                    <h3 class="card-title">Filtro</h3>
+                    <h3 class="card-title">Procesos Listos para Consolidar</h3>
                 </div>
                 <div class="card-body">
-
-                    <label>Procesos Listos para Consolidar</label>
 
                     <div class="form-group col-md-3">
                         <label>Año</label>
@@ -46,7 +44,6 @@
                             @endforeach
                         </select>
                     </div>
-
 
                     <div class="col-auto">
                         <button type="button" onclick="buscarFiltro1()" class="btn btn-success btn-sm">
@@ -65,7 +62,7 @@
         <div class="container-fluid">
             <div class="card card-gray-dark">
                 <div class="card-header">
-                    <h3 class="card-title">Expedientes Falta Expedientes</h3>
+                    <h3 class="card-title">Falta Expedientes</h3>
                 </div>
                 <div class="card-body">
 
@@ -76,6 +73,36 @@
                         </button>
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="content" style="margin-top: 20px">
+        <div class="container-fluid">
+            <div class="card card-gray-dark">
+                <div class="card-header">
+                    <h3 class="card-title">Procesos ya Consolidados</h3>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group col-md-3">
+                        <label>Año</label>
+                        <select id="select-anio-3" class="form-control">
+                            @foreach($arrayAnio as $item)
+                                <option value="{{$item->id}}">{{$item->nombre}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="button" onclick="buscarFiltro3()" class="btn btn-success btn-sm">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
 
                 </div>
             </div>
@@ -113,7 +140,12 @@
         }
 
         function buscarFiltro2(){
+            window.location.href="{{ url('/admin/filtro/busqueda/faltaexpediente') }}";
+        }
 
+        function buscarFiltro3(){
+            var idanio = document.getElementById('select-anio-3').value;
+            window.location.href="{{ url('/admin/filtro/busqueda/yaconsolidados') }}/" + idanio;
         }
 
     </script>

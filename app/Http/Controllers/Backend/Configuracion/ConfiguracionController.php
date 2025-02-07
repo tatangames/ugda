@@ -333,8 +333,9 @@ class ConfiguracionController extends Controller
 
     public function indexBusquedaNoConsolidado($id)
     {
-        return view('backend.admin.filtros.listado.vistanoconsolidado', compact('id'));
+        return view('backend.admin.filtros.listado.noconsolidados.vistanoconsolidado', compact('id'));
     }
+
 
 
     // PROCESOS LISTOS PARA CONSOLIDAR Y NO SE ACTIVADO EL BOOLEAN DEL CAMPO TABLA
@@ -385,12 +386,107 @@ class ConfiguracionController extends Controller
             ->orderBy('numero_proceso', 'asc')
             ->get();
 
-        return view('backend.admin.filtros.listado.tablanoconsolidado', compact('listado'));
+        return view('backend.admin.filtros.listado.noconsolidados.tablanoconsolidado', compact('listado'));
     }
 
 
 
 
+    //************************* FALTA EXPEDIENTES ********************************
 
+    public function indexFiltroFaltaExpedientes()
+    {
+        return view('backend.admin.filtros.listado.faltaexpediente.vistafaltaexpediente');
+    }
+
+
+
+    // BUSCAR LOS QUE LE FALTA AL MENOS 1 EXPEDIENTE
+    public function tablaFiltroFaltaExpedientes()
+    {
+
+        $listadoFiltro = Procesos::all();
+
+        $pilaProcesos = array();
+
+        foreach ($listadoFiltro as $item){
+            $docSolitante = true;
+            $docUcp = true;
+            $docAdministrador = true;
+
+            if(ProcesosSolicitante::where('id_proceso', $item->id)->first()){
+                $docSolitante = false;
+            }
+
+            if(ProcesosUcp::where('id_proceso', $item->id)->first()){
+                $docUcp = false;
+            }
+
+            if(ProcesosAdministrador::where('id_proceso', $item->id)->first()){
+                $docAdministrador = false;
+            }
+
+            //
+            if($docSolitante || $docUcp || $docAdministrador){
+                array_push($pilaProcesos, $item->id);
+            }
+        }
+
+        $listado = Procesos::where('id', $pilaProcesos)
+            ->orderBy('numero_proceso', 'asc')
+            ->get();
+
+        foreach ($listado as $item){
+            $docSolitante = false;
+            $docUcp = false;
+            $docAdministrador = false;
+
+            if(ProcesosSolicitante::where('id_proceso', $item->id)->first()){
+                $docSolitante = true;
+            }
+
+            if(ProcesosUcp::where('id_proceso', $item->id)->first()){
+                $docUcp = true;
+            }
+
+            if(ProcesosAdministrador::where('id_proceso', $item->id)->first()){
+                $docAdministrador = true;
+            }
+
+            $item->docSolicitante = $docSolitante;
+            $item->docUcp = $docUcp;
+            $item->docAdministrador = $docAdministrador;
+        }
+
+        return view('backend.admin.filtros.listado.faltaexpediente.tablafaltaexpediente', compact('listado'));
+    }
+
+    //*********************** EXPEDIENTES YA CONSOLIDADOS *******************************
+
+
+    public function indexFiltroYaConsolidados($id)
+    {
+        return view('backend.admin.filtros.listado.yaconsolidado.vistayaconsolidado', compact('id'));
+    }
+
+
+    public function tablaFiltroYaConsolidados($id)
+    {
+
+        $pilaArrayAnio = array();
+
+        $arrayFuentes = Fuentes::where('id_anio', $id)->get();
+
+        foreach ($arrayFuentes as $item){
+            array_push($pilaArrayAnio, $item->id);
+        }
+
+        $listado = Procesos::whereIn('id_fuente', $pilaArrayAnio)
+            ->where('consolidado', 1)
+            ->orderBy('numero_proceso', 'asc')
+            ->get();
+
+        return view('backend.admin.filtros.listado.yaconsolidado.tablayaconsolidado', compact('listado'));
+    }
 
 }
