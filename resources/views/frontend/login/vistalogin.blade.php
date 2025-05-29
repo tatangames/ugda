@@ -135,7 +135,9 @@
         formData.append('usuario', usuario);
         formData.append('password', password);
 
-        axios.post('/admin/login', formData, {
+        //  /ugda.com/admin/login
+
+        axios.post('/ugda.com/admin/login', formData, {
         })
             .then((response) => {
                 closeLoading();
