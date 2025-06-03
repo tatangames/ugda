@@ -264,7 +264,7 @@
             });
             var id = {{ $primerId }};
 
-            if (id === null) {
+            if (id === null || id === 0) {
                 console.log("El valor es null");
             } else {
                 openLoading()
