@@ -89,7 +89,8 @@ class ProcesosController extends Controller
             ->orderBy('nombre', 'asc')
             ->get();
 
-        $primerId = optional($arrayFuente->first())->id;
+        //$primerId = optional($arrayFuente->first())->id;
+        $primerId = optional($arrayFuente->first())->id ?? 0;
 
         foreach ($arrayFuente as $dato) {
             $info = Anios::where('id', $dato->id_anio)->first();

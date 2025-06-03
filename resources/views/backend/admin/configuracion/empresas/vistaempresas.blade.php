@@ -167,7 +167,7 @@
             var nombre = document.getElementById('nombre-nuevo').value;
 
             if(nombre === ''){
-                toastr.error('Nombre equipo es requerido');
+                toastr.error('Nombre Empresa es requerido');
                 return;
             }
 
@@ -226,7 +226,7 @@
             var nombre = document.getElementById('nombre-editar').value;
 
             if(nombre === ''){
-                toastr.error('Nombre equipo es requerido');
+                toastr.error('Nombre Empresa es requerido');
                 return;
             }
 
